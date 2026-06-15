@@ -262,7 +262,7 @@ func main() {
 		uintptr(unsafe.Pointer(className)),
 		uintptr(unsafe.Pointer(utf16Ptr(appTitle))),
 		WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_VISIBLE,
-		260, 160, 720, 470,
+		260, 160, 720, 500,
 		0, 0, hInstance, 0,
 	)
 	mainHwnd = hwnd
@@ -369,10 +369,11 @@ func createUI(hwnd uintptr) {
 	controls[idToggleEdit] = createControl("EDIT", defaultToggleKey, WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_AUTOHSCROLL, 154, 200, 120, 28, hwnd, idToggleEdit)
 	controls[idKeyHelpBtn] = createControl("BUTTON", "键位码", WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_PUSHBUTTON, 294, 199, 90, 30, hwnd, idKeyHelpBtn)
 	createText(hwnd, 404, 204, 270, 22, "默认 Delete：DEL。修改后点“一键写入”覆盖设置。")
-	createText(hwnd, 24, 252, 130, 22, "Steam 启动项")
-	controls[idLaunchEdit] = createControl("EDIT", launchOption, WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_AUTOHSCROLL|ES_READONLY, 154, 248, 350, 28, hwnd, idLaunchEdit)
-	controls[idCopyBtn] = createControl("BUTTON", "复制启动项", WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_PUSHBUTTON, 524, 247, 120, 30, hwnd, idCopyBtn)
-	controls[idStatus] = createControl("STATIC", "", WS_CHILD|WS_VISIBLE|SS_LEFT, 24, 300, 660, 110, hwnd, idStatus)
+	createText(hwnd, 24, 242, 660, 22, "wait 检测键：INS。按下后在游戏控制台查看 WAIT_ENABLED / WAIT_BLOCKED。")
+	createText(hwnd, 24, 292, 130, 22, "Steam 启动项")
+	controls[idLaunchEdit] = createControl("EDIT", launchOption, WS_CHILD|WS_VISIBLE|WS_TABSTOP|WS_BORDER|ES_AUTOHSCROLL|ES_READONLY, 154, 288, 350, 28, hwnd, idLaunchEdit)
+	controls[idCopyBtn] = createControl("BUTTON", "复制启动项", WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_PUSHBUTTON, 524, 287, 120, 30, hwnd, idCopyBtn)
+	controls[idStatus] = createControl("STATIC", "", WS_CHILD|WS_VISIBLE|SS_LEFT, 24, 340, 660, 110, hwnd, idStatus)
 }
 
 func loadAppIcon(hInstance uintptr, size int32) uintptr {
@@ -484,6 +485,7 @@ func showKeyHelp() {
 		"鼠标: MOUSE1 - MOUSE5, MWHEELUP, MWHEELDOWN",
 		"常规键: A - Z, 0 - 9, SPACE, SHIFT, CTRL, ALT, TAB, ESC",
 		"",
+		"INS 已固定为 wait 检测键，按下后在控制台查看 WAIT_ENABLED / WAIT_BLOCKED。",
 		"本工具不允许把开关键设为 SPACE，因为空格需要保留为跳跃键。",
 		"本工具也不允许把开关键设为 INS，因为 INS 已保留为 wait 检测键。",
 		"本工具也不允许把开关键设为 SHIFT，因为 SHIFT 会被恢复为 +speed。",

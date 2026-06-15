@@ -105,6 +105,7 @@ cfg-bhop-helper.exe
 - 自动扫描常见 Steam / SteamLibrary 安装路径。
 - 一键写入 CFG 块，默认使用 Delete 键（`DEL`）切换连跳。
 - 默认绑定 Insert 键（`INS`）为 `wait` 检测，按下后在控制台输出 `WAIT_ENABLED` 或 `WAIT_BLOCKED`。
+- 界面会显示 `INS` 的 wait 检测用途，便于安装后直接记住检测键。
 - 可以在界面中自定义连跳开关键，修改后再次点击“一键写入”会覆盖旧设置。
 - 提供“键位码”按钮，弹窗显示常用 L4D2 bind 键名。
 - 写入前备份现有 `autoexec.cfg`。
