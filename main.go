@@ -86,9 +86,13 @@ alias -bhop "bhop_stop"
 alias bhop_wait_yes "+bhop"
 alias bhop_wait_no "+jump; echo >> L4D2 CFG bhop helper: wait is blocked here, using normal jump."
 alias bhop_wait_test "alias bhop_wait_result bhop_wait_yes; wait; bhop_wait_result"
-alias wait "alias bhop_wait_result bhop_wait_no"
+alias wait "alias bhop_wait_result bhop_wait_no; alias wait_result wait_test_fail"
 alias +bhop_checked "bhop_wait_test"
 alias -bhop_checked "-bhop; -jump"
+
+alias wait_test_pass "echo WAIT_ENABLED"
+alias wait_test_fail "echo WAIT_BLOCKED"
+alias wait_test "alias wait_result wait_test_pass; wait; wait_result"
 
 alias bhop_on "bind SPACE +bhop_checked; alias toggle_bhop bhop_off; echo >> L4D2 CFG bhop helper: bhop ON.; say_team [BHOP_ON]"
 alias bhop_off "bind SPACE +jump; alias toggle_bhop bhop_on; -bhop; -jump; echo >> L4D2 CFG bhop helper: bhop OFF, SPACE is normal jump.; say_team [BHOP_OFF]"
@@ -97,9 +101,11 @@ alias toggle_bhop "bhop_on"
 
 unbind "SPACE"
 unbind "SHIFT"
+unbind "INS"
 {{DEFAULT_TOGGLE_UNBIND}}unbind "{{TOGGLE_KEY}}"
 bind "SHIFT" "+speed"
 bind "SPACE" "+jump"
+bind "INS" "wait_test"
 bind "{{TOGGLE_KEY}}" "toggle_bhop"
 
 -jump
@@ -107,6 +113,7 @@ bhop_init
 
 echo "-----------------------------------------------------"
 echo ">> L4D2 CFG bhop helper loaded: press {{TOGGLE_KEY}} to toggle bhop."
+echo ">> Press INS to test wait support in console."
 echo ">> Default state is OFF, so SPACE starts as normal jump."
 echo ">> If wait is blocked, bhop mode falls back to normal jump."
 echo "-----------------------------------------------------"
@@ -478,6 +485,8 @@ func showKeyHelp() {
 		"常规键: A - Z, 0 - 9, SPACE, SHIFT, CTRL, ALT, TAB, ESC",
 		"",
 		"本工具不允许把开关键设为 SPACE，因为空格需要保留为跳跃键。",
+		"本工具也不允许把开关键设为 INS，因为 INS 已保留为 wait 检测键。",
+		"本工具也不允许把开关键设为 SHIFT，因为 SHIFT 会被恢复为 +speed。",
 		"修改开关键后，点击“一键写入”会覆盖本工具的 CFG 标记块。",
 	}, "\r\n")
 	procMessageBoxW.Call(mainHwnd, uintptr(unsafe.Pointer(utf16Ptr(text))), uintptr(unsafe.Pointer(utf16Ptr("键位码参考"))), MB_OK)
@@ -565,6 +574,10 @@ func normalizeToggleKey(input string) (string, error) {
 	switch key {
 	case "SPACE":
 		return "", fmt.Errorf("不能使用 SPACE，空格需要保留为跳跃键")
+	case "INS":
+		return "", fmt.Errorf("不能使用 INS，INS 已保留为 wait 检测键")
+	case "SHIFT":
+		return "", fmt.Errorf("不能使用 SHIFT，SHIFT 需要保留为 +speed")
 	}
 	for _, r := range key {
 		if (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_' {

@@ -34,9 +34,13 @@ alias -bhop "bhop_stop"
 alias bhop_wait_yes "+bhop"
 alias bhop_wait_no "+jump; echo >> L4D2 CFG bhop helper: wait is blocked here, using normal jump."
 alias bhop_wait_test "alias bhop_wait_result bhop_wait_yes; wait; bhop_wait_result"
-alias wait "alias bhop_wait_result bhop_wait_no"
+alias wait "alias bhop_wait_result bhop_wait_no; alias wait_result wait_test_fail"
 alias +bhop_checked "bhop_wait_test"
 alias -bhop_checked "-bhop; -jump"
+
+alias wait_test_pass "echo WAIT_ENABLED"
+alias wait_test_fail "echo WAIT_BLOCKED"
+alias wait_test "alias wait_result wait_test_pass; wait; wait_result"
 
 alias bhop_on "bind SPACE +bhop_checked; alias toggle_bhop bhop_off; echo >> L4D2 CFG bhop helper: bhop ON.; say_team [BHOP_ON]"
 alias bhop_off "bind SPACE +jump; alias toggle_bhop bhop_on; -bhop; -jump; echo >> L4D2 CFG bhop helper: bhop OFF, SPACE is normal jump.; say_team [BHOP_OFF]"
@@ -45,9 +49,11 @@ alias toggle_bhop "bhop_on"
 
 unbind "SPACE"
 unbind "SHIFT"
+unbind "INS"
 unbind "DEL"
 bind "SHIFT" "+speed"
 bind "SPACE" "+jump"
+bind "INS" "wait_test"
 bind "DEL" "toggle_bhop"
 
 -jump
@@ -55,6 +61,7 @@ bhop_init
 
 echo "-----------------------------------------------------"
 echo ">> L4D2 CFG bhop helper loaded: press DEL to toggle bhop."
+echo ">> Press INS to test wait support in console."
 echo ">> Default state is OFF, so SPACE starts as normal jump."
 echo ">> If wait is blocked, bhop mode falls back to normal jump."
 echo "-----------------------------------------------------"
@@ -97,6 +104,7 @@ cfg-bhop-helper.exe
 
 - 自动扫描常见 Steam / SteamLibrary 安装路径。
 - 一键写入 CFG 块，默认使用 Delete 键（`DEL`）切换连跳。
+- 默认绑定 Insert 键（`INS`）为 `wait` 检测，按下后在控制台输出 `WAIT_ENABLED` 或 `WAIT_BLOCKED`。
 - 可以在界面中自定义连跳开关键，修改后再次点击“一键写入”会覆盖旧设置。
 - 提供“键位码”按钮，弹窗显示常用 L4D2 bind 键名。
 - 写入前备份现有 `autoexec.cfg`。
